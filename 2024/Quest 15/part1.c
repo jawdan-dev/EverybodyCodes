@@ -1,34 +1,10 @@
 #include <common/common.h>
-
-typedef struct {
-	int x, y;
-} Point;
+#include <common/point.h>
 
 typedef struct {
 	Point pos;
 	int cost;
 } Node;
-
-int abs(const int v) {
-	return v >= 0 ? v : -v;
-}
-
-const bool point_equal(const Point* p1, const Point* p2) {
-	return p1->x == p2->x && p1->y == p2->y;
-}
-
-const Point point_add(const Point* p1, const Point* p2) {
-	return (Point) {
-		.x = p1->x + p2->x,
-			.y = p1->y + p2->y,
-	};
-}
-
-int pointDistance(const Point* p1, const Point* p2) {
-	int cx = p1->x - p2->x;
-	int cy = p1->y - p2->y;
-	return abs(cx) + abs(cy);
-}
 
 int main() {
 	printf("\n");
@@ -110,7 +86,7 @@ int main() {
 
 		const int checkCost = node.cost + 1;
 		for (int i = 0; i < ARRAY_LENGTH(checks); i++) {
-			const Point checkPoint = point_add(&node.pos, &checks[i]);
+			const Point checkPoint = Point_add(&node.pos, &checks[i]);
 
 			if (checkPoint.x < 0 || checkPoint.x >= width || checkPoint.y < 0 || checkPoint.y >= height)
 				continue;
@@ -119,7 +95,7 @@ int main() {
 
 			bool duplicateFound = false;
 			for (int n = 0; n < nodeCount && !duplicateFound; n++) {
-				if (point_equal(&nodes[n].pos, &checkPoint)) {
+				if (Point_equal(&nodes[n].pos, &checkPoint)) {
 					if (checkCost < nodes[n].cost)
 						nodes[n].cost = checkCost;
 					duplicateFound = true;

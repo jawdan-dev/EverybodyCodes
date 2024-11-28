@@ -1,35 +1,14 @@
 #include <common/common.h>
+#include <common/point.h>
 
 #define MAP_SIZE 256
 #define MAX_UNIQUE_FLOWERS 5
 #define TARGETS_MAX 128
 
 typedef struct {
-	int x, y;
-} Point;
-typedef struct {
 	Point pos;
 	int cost;
 } Node;
-
-int abs(const int v) {
-	return v >= 0 ? v : -v;
-}
-
-const bool point_equal(const Point* p1, const Point* p2) {
-	return p1->x == p2->x && p1->y == p2->y;
-}
-const Point point_add(const Point* p1, const Point* p2) {
-	return (Point) {
-		.x = p1->x + p2->x,
-			.y = p1->y + p2->y,
-	};
-}
-const int point_distance(const Point* p1, const Point* p2) {
-	int cx = p1->x - p2->x;
-	int cy = p1->y - p2->y;
-	return abs(cx) + abs(cy);
-}
 
 static char map[MAP_SIZE][MAP_SIZE];
 static int width, height;
@@ -80,7 +59,7 @@ void expandPathCost(const Point* origin, int output[MAP_SIZE][MAP_SIZE]) {
 
 		const int checkStartDistance = node.cost + 1;
 		for (int i = 0; i < ARRAY_LENGTH(checks); i++) {
-			const Point checkPoint = point_add(&node.pos, &checks[i]);
+			const Point checkPoint = Point_add(&node.pos, &checks[i]);
 
 			if (checkPoint.x < 0 || checkPoint.x >= width || checkPoint.y < 0 || checkPoint.y >= height)
 				continue;
@@ -89,7 +68,7 @@ void expandPathCost(const Point* origin, int output[MAP_SIZE][MAP_SIZE]) {
 
 			bool duplicateFound = false;
 			for (int n = 0; n < nodeCount && !duplicateFound; n++) {
-				if (point_equal(&nodes[n].pos, &checkPoint)) {
+				if (Point_equal(&nodes[n].pos, &checkPoint)) {
 					if (checkStartDistance < nodes[n].cost)
 						nodes[n].cost = checkStartDistance;
 					duplicateFound = true;

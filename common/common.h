@@ -8,3 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+
+const int abs(const int v) {
+	return v >= 0 ? v : -v;
+}
